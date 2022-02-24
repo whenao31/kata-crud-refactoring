@@ -12,7 +12,8 @@ public class ToDoList {
     private Long id;
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval= true)
+    @JoinColumn(name = "to_do_list_id")
     private Set<ToDo> toDos;
 
     public Long getId() {

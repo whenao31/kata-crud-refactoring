@@ -101,20 +101,13 @@ public class ToDoListService {
                 .collect(Collectors.toSet());
     }
 
-    public Iterable<ToDo> list(){
-        return repoToDo.findAll();
+    public void removeToDoById(Long id){
+        var toDo = repoToDo.findById(id).orElseThrow();
+        repoToDo.delete(toDo);
     }
 
-    public ToDo save(ToDo todo){
-        return repoToDo.save(todo);
+    public void removeTodoListById(Long id){
+        var toDoList = repoToDoList.findById(id).orElseThrow();
+        repoToDoList.delete(toDoList);
     }
-
-    public void delete(Long id){
-        repoToDo.delete(get(id));
-    }
-
-    public ToDo get(Long id){
-         return repoToDo.findById(id).orElseThrow();
-    }
-
 }

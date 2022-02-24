@@ -37,32 +37,14 @@ public class ToDoListController {
         return serviceListToDo.updateToDoByListId(listId, toDoDTO);
     }
 
-    @GetMapping(value = "api/todos")
-    public Iterable<ToDo> list(){
-        return serviceListToDo.list();
-    }
-    
-    @PostMapping(value = "api/todo")
-    public ToDo save(@RequestBody ToDo todo){
-        return serviceListToDo.save(todo);
+    @DeleteMapping("/todo/{todoId}")
+    public void removeToDoById(@PathVariable("todoId") Long toDoId){
+        serviceListToDo.removeToDoById(toDoId);
     }
 
-    @PutMapping(value = "api/todo")
-    public ToDo update(@RequestBody ToDo todo){
-        if(todo.getId() != null){
-            return serviceListToDo.save(todo);
-        }
-        throw new RuntimeException("No existe el id para actualziar");
-    }
-
-    @DeleteMapping(value = "api/{id}/todo")
-    public void delete(@PathVariable("id")Long id){
-        serviceListToDo.delete(id);
-    }
-
-    @GetMapping(value = "api/{id}/todo")
-    public ToDo get(@PathVariable("id") Long id){
-        return serviceListToDo.get(id);
+    @DeleteMapping("/todos/{listId}")
+    public void removeToDoListById(@PathVariable("listId") Long listId){
+        serviceListToDo.removeTodoListById(listId);
     }
 
 }
