@@ -7,11 +7,11 @@ import co.com.sofka.crud.model.ToDoListDTO;
 import co.com.sofka.crud.repository.ToDoListRepository;
 import co.com.sofka.crud.repository.TodoRepository;
 import co.com.sofka.crud.utils.Mapper;
+import co.com.sofka.crud.utils.MyBussinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.management.RuntimeErrorException;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Optional;
@@ -34,7 +34,6 @@ public class ToDoListService {
     }
 
     private Set<ToDoDTO> getToDosFromList(Optional<ToDoList> toDoList) {
-        log.info(toDoList.toString());
         return toDoList.orElseGet(ToDoList::new)
                 .getToDos()
                 .stream()
@@ -44,15 +43,13 @@ public class ToDoListService {
 
     public ToDoDTO saveNewToDoByListId(Long listId, ToDoDTO toDoDTO){
         var _toDoList = repoToDoList.findById(listId);
-//        if (toDoDTO.getName().isEmpty()){
-//            throw new RuntimeErrorException();
-//        }
+        if (toDoDTO.getName().isEmpty()){
+            throw new MyBussinessException("Invalid ToDo name. Name required.");
+        }
 
+        var _toDo = Mapper.mapToDoDTOToToDo(toDoDTO);
 
-//holis :3
-        var toDo = Mapper.mapToDoDTOToToDo(toDoDTO);
-
-        _toDoList.orElseGet(ToDoList::new).getToDos().add(toDo);
+        _toDoList.orElseGet(ToDoList::new).getToDos().add(_toDo);
         var listUpdated = repoToDoList.save(_toDoList.get());
         var insertedToDo = listUpdated.getToDos()
                                     .stream()
@@ -64,12 +61,44 @@ public class ToDoListService {
     }
 
     public ToDoListDTO createToDoList(ToDoListDTO toDoListDTO){
+        if (toDoListDTO.getName().isEmpty()){
+            throw new MyBussinessException("Invalid ToDo name. Name required.");
+        }
         ToDoList toDoList = new ToDoList();
         toDoList.setId(toDoListDTO.getId());
         toDoList.setName(toDoListDTO.getName());
         toDoList.setToDos(new HashSet<>());
 
         return Mapper.mapListToListDTO(repoToDoList.save(toDoList));
+    }
+
+    public ToDoDTO updateToDoByListId(Long listId, ToDoDTO toDoDTO){
+        var foundToDoList = repoToDoList.findById(listId);
+        if (toDoDTO.getName().isEmpty()){
+            throw new MyBussinessException("Invalid ToDo name. Name required.");
+        }
+        var updatedToDos = editToDosInList(foundToDoList.orElseGet(ToDoList::new), toDoDTO);
+
+        ToDoList _toDoList = new ToDoList();
+        _toDoList.setId(foundToDoList.orElseGet(ToDoList::new).getId());
+        _toDoList.setName(foundToDoList.orElseGet(ToDoList::new).getName());
+        _toDoList.setToDos(foundToDoList.orElseGet(ToDoList::new).getToDos());
+        repoToDoList.save(_toDoList);
+        toDoDTO.setGroupListId(listId);
+        return toDoDTO;
+    }
+
+    private Set<ToDo> editToDosInList(ToDoList foundToDoList, ToDoDTO toDoDTO){
+        return foundToDoList.getToDos()
+                .stream()
+                .map(toDo -> {
+                    if (toDo.getId().equals(toDoDTO.getId())){
+                        toDo.setName(toDoDTO.getName());
+                        toDo.setCompleted(toDoDTO.isCompleted());
+                    }
+                    return toDo;
+                })
+                .collect(Collectors.toSet());
     }
 
     public Iterable<ToDo> list(){

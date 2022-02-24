@@ -32,6 +32,11 @@ public class ToDoListController {
         return serviceListToDo.saveNewToDoByListId(listId, toDoDTO);
     }
 
+    @PutMapping("/todo/{listId}")
+    public ToDoDTO updateTodoByListId(@PathVariable("listId") Long listId, @RequestBody ToDoDTO toDoDTO){
+        return serviceListToDo.updateToDoByListId(listId, toDoDTO);
+    }
+
     @GetMapping(value = "api/todos")
     public Iterable<ToDo> list(){
         return serviceListToDo.list();
