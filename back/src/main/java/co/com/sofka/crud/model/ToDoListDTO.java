@@ -9,6 +9,9 @@ public class ToDoListDTO {
     private String name;
     private Set<ToDo> toDos;
 
+    public ToDoListDTO() {
+    }
+
     public ToDoListDTO(Long id, String name, Set<ToDo> toDos) {
         this.id = id;
         this.name = name;

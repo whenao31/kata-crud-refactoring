@@ -36,4 +36,13 @@ public class ToDo {
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
+
+    @Override
+    public String toString() {
+        return "ToDo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", completed=" + completed +
+                '}';
+    }
 }

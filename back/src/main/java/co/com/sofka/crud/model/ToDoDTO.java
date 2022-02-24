@@ -7,6 +7,9 @@ public class ToDoDTO {
     private boolean completed;
     private Long groupListId;
 
+    public ToDoDTO() {
+    }
+
     public ToDoDTO(Long id, String name, boolean completed, Long groupListId) {
         this.id = id;
         this.name = name;
