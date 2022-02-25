@@ -1,6 +1,7 @@
 package co.com.sofka.crud.controller;
 
 import co.com.sofka.crud.entity.ToDo;
+import co.com.sofka.crud.model.ReducedListDTO;
 import co.com.sofka.crud.model.ToDoDTO;
 import co.com.sofka.crud.model.ToDoListDTO;
 import co.com.sofka.crud.service.ToDoListService;
@@ -17,13 +18,18 @@ public class ToDoListController {
     @Autowired
     private ToDoListService serviceListToDo;
 
+    @GetMapping("/todolists")
+    public Set<ReducedListDTO> findAllLists(){
+        return serviceListToDo.findAllLists();
+    }
+
     @PostMapping("/todolist")
     public ToDoListDTO saveNewTodoList(@RequestBody ToDoListDTO toDoListDTO){
         return serviceListToDo.createToDoList(toDoListDTO);
     }
 
     @GetMapping("/todos/{listId}")
-    public Set<ToDoDTO> findToDoListById(@PathVariable("listId") Long listId){
+    public Set<ToDoDTO> findToDosByListId(@PathVariable("listId") Long listId){
         return serviceListToDo.findToDosByListId(listId);
     }
 
@@ -42,7 +48,7 @@ public class ToDoListController {
         serviceListToDo.removeToDoById(toDoId);
     }
 
-    @DeleteMapping("/todos/{listId}")
+    @DeleteMapping("/todolist/{listId}")
     public void removeToDoListById(@PathVariable("listId") Long listId){
         serviceListToDo.removeTodoListById(listId);
     }

@@ -2,6 +2,7 @@ package co.com.sofka.crud.utils;
 
 import co.com.sofka.crud.entity.ToDo;
 import co.com.sofka.crud.entity.ToDoList;
+import co.com.sofka.crud.model.ReducedListDTO;
 import co.com.sofka.crud.model.ToDoDTO;
 import co.com.sofka.crud.model.ToDoListDTO;
 
@@ -36,5 +37,12 @@ public class Mapper {
         toDo.setName(toDoDTO.getName());
         toDo.setCompleted(toDoDTO.isCompleted());
         return toDo;
+    }
+
+    public static ReducedListDTO mapListToReducedListDTO(ToDoList toDoList){
+        ReducedListDTO reducedListDTO = new ReducedListDTO();
+        reducedListDTO.setName(toDoList.getName());
+        reducedListDTO.setId(toDoList.getId());
+        return reducedListDTO;
     }
 }

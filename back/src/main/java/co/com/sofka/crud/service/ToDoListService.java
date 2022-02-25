@@ -2,6 +2,7 @@ package co.com.sofka.crud.service;
 
 import co.com.sofka.crud.entity.ToDo;
 import co.com.sofka.crud.entity.ToDoList;
+import co.com.sofka.crud.model.ReducedListDTO;
 import co.com.sofka.crud.model.ToDoDTO;
 import co.com.sofka.crud.model.ToDoListDTO;
 import co.com.sofka.crud.repository.ToDoListRepository;
@@ -27,6 +28,12 @@ public class ToDoListService {
 
     @Autowired
     private ToDoListRepository repoToDoList;
+
+    public Set<ReducedListDTO> findAllLists(){
+        return repoToDoList.findAll().stream()
+                .map(item -> Mapper.mapListToReducedListDTO(item))
+                .collect(Collectors.toSet());
+    }
 
     public Set<ToDoDTO> findToDosByListId(Long listId){
         var _toDoList = repoToDoList.findById(listId);
